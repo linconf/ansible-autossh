@@ -1,0 +1,19 @@
+---
+#| - - - - - - - - - - - - - - - - - -
+#| Ansible :: autossh :: tasks - main.yml
+#| 
+
+- include: config.yml
+  tags: [ 'autossh' ]
+
+
+- include: setup.yml
+  tags: [ 'autossh' ]
+
+
+- include: service.yml
+  tags: [ 'autossh' ]
+
+
+- include: sshfs-id-files.yml
+  tags: [ 'autossh' ]

@@ -1,0 +1,15 @@
+---
+#| - - - - - - - - - - - - - - - - - -
+#| Ansible :: autossh :: tasks - setup.yml
+#| 
+
+- name: Add/Remove autossh package
+  action: apt pkg={{ item }} state={{ autossh_pkg_state }}
+  with_items: autossh_packages
+
+- name: Add/Remove sshfs package
+  action: apt pkg={{ item }} state={{ autossh_pkg_state }}
+  with_items: autossh_fs_packages
+  when: autossh_fs_tunnels is defined or autossh_fs_host_tunnels is defined or
+    autossh_fs_group_tunnels is defined
+

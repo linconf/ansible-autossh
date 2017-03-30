@@ -1,0 +1,68 @@
+---
+
+#| Set to `False` to disable the role
+
+autossh_role_enabled: True
+
+
+#|  Packages and Services 
+
+autossh_pkg_state: 'present'
+autossh_packages: 'autossh'
+autossh_file_config: '/etc/autossh'
+
+
+#|  SSH Variables
+
+autossh_server_user: sshfs
+autossh_server_group: sshfs
+autossh_client_user: sshfs
+autossh_client_group: sshfs
+autossh_port: '22'
+
+
+#|  Global Defaults 
+
+autossh_tunnels: []
+autossh_host_tunnels: []
+autossh_group_tunnels: []
+autossh_part_tunnels: "{{ autossh_tunnels|union(autossh_host_tunnels) }}"
+autossh_all_tunnels: "{{ autossh_part_tunnels|union(autossh_group_tunnels) }}"
+
+autossh_fs_tunnels: []
+#  - name: 'sshfs-tunnel'
+#    M_monitoring_port: '2005'
+#    N_remote_code_execution: False
+#    ssh_port: '22'
+#    ssh_user: 'sshfs'
+#    remote_host: 'example.com'
+#    remote_path: '/'
+#    local_path: '/chroot/ssh/'
+#    local_path_owner: 'sshfs'
+#    local_path_group: 'sshfs'
+#    local_path_mode: '0755'
+#    identity_file: '~/.ssh/id_rsa'
+#    sshfs_idmap_uid_file: '~/sshfs.uid'
+#    sshfs_idmap_user: 'www-data'
+#    sshfs_idmap_uid: '1075'
+#    sshfs_idmap_gid_file: '~/sshfs.gid'
+#    sshfs_idmap_group: 'www-data'
+#    sshfs_idmap_gid: '1075'
+autossh_fs_host_tunnels: []
+autossh_fs_group_tunnels: []
+autossh_fs_part_tunnels: "{{ autossh_fs_tunnels|union(autossh_fs_host_tunnels) }}"
+autossh_fs_all_tunnels: "{{ autossh_fs_part_tunnels|union(autossh_fs_group_tunnels) }}"
+
+autossh_systemd: True
+autossh_systemd_default_dir: "/etc/default"
+autossh_systemd_systemd_dir: "/etc/systemd/system"
+
+autossh_autostart_scripts: False
+autossh_autostart_script: '/etc/network/if-up.d/autossh'
+autossh_autostart_script_owner: 'root'
+autossh_autostart_script_group: 'root'
+autossh_autostart_script_permissions: '0755'
+
+#|  Role Controls
+
+autossh_flush_tunnels: False

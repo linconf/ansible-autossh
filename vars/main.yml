@@ -1,0 +1,8 @@
+---
+#| - - - - - - - - - - - - - - - - - -
+#| Ansible :: autossh :: vars - main.yml
+#| 
+
+autossh_packages: 'autossh'
+autossh_fs_packages: 'sshfs'
+autossh_file_config: '/etc/autossh'

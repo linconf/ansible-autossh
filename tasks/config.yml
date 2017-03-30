@@ -1,0 +1,20 @@
+---
+#| - - - - - - - - - - - - - - - - - -
+#| Ansible :: autossh :: tasks - config.yml
+#| 
+
+- name: Load OS specific varibles
+  include_vars: "Debian.yml"
+
+
+- name: Ensure sshfs folders exist
+  file:
+    path: "{{item.local_path}}"
+    state: "directory"
+    owner: '{{ item.local_path_owner | d(omit) }}'
+    group: '{{ item.local_path_group | d(omit) }}'
+    mode: '{{ item.local_path_mode | d(omit) }}'
+  with_flattened:
+    - '{{ autossh_fs_tunnels }}'
+    - '{{ autossh_fs_host_tunnels }}'
+    - '{{ autossh_fs_group_tunnels }}'

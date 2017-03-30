@@ -1,0 +1,48 @@
+#! /bin/sh
+# {{ ansible_managed }}
+#| - - - - - - - - - - - - - - - - - -
+#| Reload autossh tunnels when an interface comes up
+#| 
+
+
+{% for tunnel in autossh_all_tunnels: -%}
+# autossh tunnel: {{ tunnel.name}}
+{% print '/usr/bin/autossh -M ', tunnel.M_monitoring_port -%}
+{% if tunnel.N_remote_code_execution == False -%}
+  {% print ' -N' -%}
+{% endif -%}
+{% if tunnel.forwarding_direction == 'L' -%}
+  {% print ' -L' -%}
+{% else -%}
+  {% print ' -R' -%}
+{% endif -%}
+{% print ' ', tunnel.L_bind_port_local -%}
+{% print ':', tunnel.L_hostname_local, ':' -%}
+{% print tunnel.L_bind_port_remote -%}
+{% print ' -p ',  tunnel.ssh_port -%}
+{% print ' ', tunnel.ssh_user, '@', tunnel.remote_host %}
+{% print ' -f -i ',  tunnel.identity_file %}
+
+{% endfor %}
+
+
+{% for tunnel in autossh_fs_all_tunnels: -%}
+# autossh-fs tunnel: {{ tunnel.name}}
+{% print '/usr/bin/sshfs -o ' -%}
+{% print 'reconnect,compression=no,auto_cache' -%}
+{% print ',cache_timeout=5,transform_symlinks' -%}
+{% if tunnel.sshfs_idmap_uid_file is defined -%}
+  {% print ',idmap=file,uidfile=', tunnel.sshfs_idmap_uid_file -%}
+  {% print ',gidfile=', tunnel.sshfs_idmap_gid_file, ',suid' -%}
+  {% print ',nomap=ignore' -%}
+{% endif -%}
+{% print ',allow_other,ServerAliveInterval=60' -%}
+{% print ',ServerAliveCountMax=3,StrictHostKeyChecking=no' -%}
+{% print ',UserKnownHostsFile=/dev/null' -%}
+{% print ',IdentityFile=', tunnel.identity_file -%}
+{% print ' ', tunnel.ssh_user, '@', tunnel.remote_host %}
+{% print ':', tunnel.remote_path, ' ', tunnel.local_path -%}
+{% print ' -p ',  tunnel.ssh_port -%}
+{% endfor %}
+
+exit 0

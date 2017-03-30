@@ -1,0 +1,31 @@
+---
+#| - - - - - - - - - - - - - - - - - -
+#| Ansible :: autossh :: tasks - setup.yml
+#| 
+
+- name: Setup SSHFS uid file
+  template:
+    src: sshfs.uid.j2
+    dest: "{{ item.sshfs_idmap_uid_file }}"
+    owner: "root"
+    group: "root"
+    mode: "644"
+  with_flattened:
+    - '{{ autossh_fs_tunnels }}'
+    - '{{ autossh_fs_host_tunnels }}'
+    - '{{ autossh_fs_group_tunnels }}'
+  when: item.sshfs_idmap_uid_file is defined
+
+- name: Setup SSHFS gid file
+  template:
+    src: sshfs.gid.j2
+    dest: "{{ item.sshfs_idmap_gid_file }}"
+    owner: "root"
+    group: "root"
+    mode: "644"
+  with_flattened:
+    - '{{ autossh_fs_tunnels }}'
+    - '{{ autossh_fs_host_tunnels }}'
+    - '{{ autossh_fs_group_tunnels }}'
+  when: item.sshfs_idmap_gid_file is defined
+

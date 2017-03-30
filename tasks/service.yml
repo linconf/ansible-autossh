@@ -1,0 +1,14 @@
+---
+#| - - - - - - - - - - - - - - - - - -
+#| Ansible :: autossh :: tasks - service.yml
+#| 
+
+- name: Setup auto-start script
+  template:
+    src: autossh.j2
+    dest: "{{ autossh_autostart_script }}"
+    owner: "{{ autossh_autostart_script_owner }}"
+    group: "{{ autossh_autostart_script_group }}"
+    mode: "{{ autossh_autostart_script_permissions }}"
+  when: autossh_autostart_scripts | bool
+
